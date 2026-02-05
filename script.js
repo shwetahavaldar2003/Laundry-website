@@ -3,7 +3,7 @@ let total = 0;
 
 // Initialize EmailJS
 (function() {
-    emailjs.init('YOUR_PUBLIC_KEY'); // Replace with your EmailJS public key
+    emailjs.init('N7s6R1wITL6dSwvjv'); // Replace with your actual public key
 })();
 
 function scrollToServices() {
@@ -103,23 +103,43 @@ function bookService() {
         total_amount: total
     };
     
-    emailjs.send('YOUR_SERVICE_ID', 'YOUR_TEMPLATE_ID', templateParams)
+    // Send actual email using EmailJS
+    emailjs.send('service_xdi79lj', 'template_fufhm88', templateParams)
         .then(function(response) {
             console.log('Email sent successfully!', response.status, response.text);
+            
+            // Clear cart after successful email
+            clearCart();
+            
+            const msg = document.getElementById('successMsg');
+            msg.style.display = 'block';
+            
+            document.getElementById('fullName').value = '';
+            document.getElementById('email').value = '';
+            document.getElementById('phone').value = '';
+            
+            setTimeout(() => {
+                msg.style.display = 'none';
+            }, 5000);
         }, function(error) {
             console.log('Email failed to send:', error);
+            alert('Failed to send email. Please try again.');
         });
+}
+
+function clearCart() {
+    cart = [];
+    total = 0;
     
-    const msg = document.getElementById('successMsg');
-    msg.style.display = 'block';
+    // Reset all buttons to "Add Items"
+    const buttons = document.querySelectorAll('.service-item button');
+    buttons.forEach(button => {
+        button.innerText = "Add Items";
+        button.classList.remove("remove");
+        button.classList.add("add");
+    });
     
-    document.getElementById('fullName').value = '';
-    document.getElementById('email').value = '';
-    document.getElementById('phone').value = '';
-    
-    setTimeout(() => {
-        msg.style.display = 'none';
-    }, 5000);
+    updateCartUI();
 }
 
 function subscribeNewsletter() {
