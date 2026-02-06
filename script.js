@@ -96,6 +96,7 @@ function bookService() {
     
     // EmailJS send email
     const templateParams = {
+        to_email: email, // Send to user's email
         user_name: fullName,
         user_email: email,
         user_phone: phone,
