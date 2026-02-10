@@ -1,28 +1,24 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Laundry Services</title>
     <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet"
-          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 </head>
-
 <body>
 
-    <!-- Navbar -->
     <header class="navbar">
         <div class="logo">
-            <img src="https://s3u.tmimgcdn.com/u37752224/fd3eb95df7e9e65ce3617700e5c77a0b.gif" alt="laundry service">
+            <img src="https://s3u.tmimgcdn.com/u37752224/fd3eb95df7e9e65ce3617700e5c77a0b.gif" alt="laundry">
         </div>
         <nav class="nav-links">
             <a href="#home">Home</a>
             <a href="#services">Services</a>
-            <a href="#about">About Us</a>
-            <a href="#contact">Contact Us</a>
+            <a href="#about">About</a>
+            <a href="#contact">Contact</a>
         </nav>
         <div class="user">Username</div>
         <div class="hamburger">
@@ -32,51 +28,29 @@
         </div>
     </header>
 
-    <!-- Hero Section -->
     <div class="container" id="home">
         <section class="hero">
             <div class="hero-text">
-                <h1>
-                    Revitalize Your <br>
-                    Clothes with Expert <br>
-                    <span>Laundry Services!</span>
-                </h1>
-                <p>
-                    From premium dry cleaning to swift wash and fold,
-                    we deliver care and convenience. Schedule a pickup
-                    and rediscover the freshness of your clothes today!
-                </p>
+                <h1>Revitalize Your <br>Clothes with Expert <br><span>Laundry Services!</span></h1>
+                <p>From premium dry cleaning to swift wash and fold, we deliver care and convenience. Schedule a pickup and rediscover the freshness of your clothes today!</p>
                 <button onclick="scrollToServices()">📅 Book a Service Today!</button>
             </div>
             <div class="hero-image">
-                <img src="https://static.vecteezy.com/system/resources/thumbnails/026/721/193/small/washing-machine-and-laundry-laundry-sticker-png.png"
-                    alt="Laundry Machine">
+                <img src="https://static.vecteezy.com/system/resources/thumbnails/026/721/193/small/washing-machine-and-laundry-laundry-sticker-png.png" alt="Laundry Machine">
             </div>
         </section>
     </div>
 
-    <!-- Service Overview Section -->
     <section class="service-overview">
         <div class="stats">
-            <div>
-                <h3>15+</h3>
-                <p>Laundry Services</p>
-            </div>
-            <div>
-                <h3>240+</h3>
-                <p>Happy Customers</p>
-            </div>
-            <div>
-                <h3>2+ Yrs</h3>
-                <p>Experience</p>
-            </div>
+            <div><h3>15+</h3><p>Laundry Services</p></div>
+            <div><h3>240+</h3><p>Happy Customers</p></div>
+            <div><h3>2+ Yrs</h3><p>Experience</p></div>
         </div>
     </section>
 
-    <!-- Booking Services Section -->
     <div class="container">
         <section class="service" id="services">
-            <!-- Left Div -->
             <div class="services">
                 <h2>Our Services</h2>
                 <p class="subtitle">Select services and manage your cart</p>
@@ -120,9 +94,7 @@
                 <p class="note">ⓘ Add items to the cart</p>
             </div>
 
-            <!-- Right Div -->
             <div class="cart">
-                <!-- First Div: Cart Items -->
                 <div class="cart-items">
                     <h3>Added Items</h3>
                     <div id="no-items" class="no-items">No added items</div>
@@ -143,7 +115,6 @@
                     </div>
                 </div>
 
-                <!-- Second Div: Book Now -->
                 <div class="booking-form">
                     <h4>Book Now</h4>
                     <input type="text" id="fullName" placeholder="Full Name" required>
@@ -158,12 +129,10 @@
         </section>
     </div>
 
-    <!-- Quality Description Section -->
     <section class="quality-section" id="about">
         <div class="container">
             <h2>Why Choose Our Laundry Services?</h2>
             <p class="quality-intro">Discover the unique selling points and distinguishing features that set our laundry services apart from competitors.</p>
-            
             <div class="features">
                 <div class="feature">
                     <i class="fa-solid fa-soap"></i>
@@ -192,27 +161,23 @@
         </div>
     </section>
 
-    <!-- Newsletter Subscription Section -->
     <section class="newsletter">
         <div class="container">
             <div class="newsletter-content">
                 <h2>Stay Connected with Our Newsletter</h2>
                 <p>Subscribe to stay informed about the latest updates, promotions, and news related to our laundry service. Join our community and never miss out on exclusive offers!</p>
             </div>
-            
             <div class="newsletter-form">
                 <input type="text" id="newsletter-name" placeholder="Full Name" required>
                 <input type="email" id="newsletter-email" placeholder="Email Address" required>
                 <button onclick="subscribeNewsletter()">Subscribe</button>
             </div>
-            
             <div id="newsletter-success" class="newsletter-success">
                 ✅ Thank you for subscribing! You'll receive our latest updates and promotions.
             </div>
         </div>
     </section>
 
-    <!-- FOOTER -->
     <footer id="contact">
         <div class="footer-container">
             <div class="footer-box">
