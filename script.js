@@ -1,180 +1,176 @@
-let cart = [];
-let total = 0;
+var cartItems = [];
+var totalPrice = 0;
 
-// Initialize EmailJS
-(function() {
-    emailjs.init('N7s6R1wITL6dSwvjv'); // Replace with your actual public key
+(function(){
+    emailjs.init('N7s6R1wITL6dSwvjv');
 })();
 
-function scrollToServices() {
-    document.getElementById('services').scrollIntoView({
-        behavior: 'smooth'
-    });
-}
-
-function toggleCart(button, service, price) {
-    let index = cart.findIndex(item => item.service === service);
-
-    if (index === -1) {
-        cart.push({ service, price });
-        total += price;
-        button.innerText = "Remove Now";
-        button.classList.remove("add");
-        button.classList.add("remove");
-    } else {
-        total -= cart[index].price;
-        cart.splice(index, 1);
-        button.innerText = "Add Items";
-        button.classList.remove("remove");
-        button.classList.add("add");
+function toggleMenu(){
+    var nav = document.getElementById('nav');
+    if(nav.style.display === 'flex'){
+        nav.style.display = 'none';
+    }else{
+        nav.style.display = 'flex';
     }
-
-    updateCartUI();
 }
 
-function updateCartUI() {
-    const noItems = document.getElementById("no-items");
-    const cartTable = document.getElementById("cart-table");
-    const cartItems = document.getElementById("cartItems");
+function addToCart(btn, serviceName, price){
+    var found = false;
+    for(var i=0; i<cartItems.length; i++){
+        if(cartItems[i].name === serviceName){
+            found = true;
+            break;
+        }
+    }
     
-    if (cart.length === 0) {
-        noItems.style.display = "block";
-        cartTable.style.display = "none";
-    } else {
-        noItems.style.display = "none";
-        cartTable.style.display = "table";
-        
-        cartItems.innerHTML = "";
-        cart.forEach((item, index) => {
-            cartItems.innerHTML += `
-                <tr>
-                    <td>${index + 1}</td>
-                    <td>${item.service}</td>
-                    <td>₹${item.price}</td>
-                    <td><button class="remove" onclick="removeFromCart('${item.service}')">Remove</button></td>
-                </tr>
-            `;
-        });
-    }
-
-    document.getElementById("totalAmount").innerText = `₹${total}`;
-}
-
-function removeFromCart(serviceName) {
-    let index = cart.findIndex(item => item.service === serviceName);
-    if (index !== -1) {
-        total -= cart[index].price;
-        cart.splice(index, 1);
-        
-        const buttons = document.querySelectorAll('.service-item button');
-        buttons.forEach(button => {
-            if (button.onclick.toString().includes(serviceName)) {
-                button.innerText = "Add Items";
-                button.classList.remove("remove");
-                button.classList.add("add");
-            }
-        });
-        
-        updateCartUI();
+    if(found){
+        removeItem(serviceName);
+        btn.innerText = 'Add Items';
+        btn.className = 'btn-add';
+    }else{
+        cartItems.push({name: serviceName, price: price});
+        totalPrice = totalPrice + price;
+        btn.innerText = 'Remove Now';
+        btn.className = 'btn-remove';
+        updateCart();
     }
 }
 
-function bookService() {
-    const fullName = document.getElementById('fullName').value;
-    const email = document.getElementById('email').value;
-    const phone = document.getElementById('phone').value;
+function removeItem(serviceName){
+    for(var i=0; i<cartItems.length; i++){
+        if(cartItems[i].name === serviceName){
+            totalPrice = totalPrice - cartItems[i].price;
+            cartItems.splice(i, 1);
+            break;
+        }
+    }
+    updateCart();
+}
+
+function updateCart(){
+    var empty = document.getElementById('empty');
+    var table = document.getElementById('cartTable');
+    var tbody = document.getElementById('cartBody');
+    var total = document.getElementById('total');
     
-    if (!fullName || !email || !phone) {
-        alert('Please fill in all fields');
+    if(cartItems.length === 0){
+        empty.style.display = 'block';
+        table.style.display = 'none';
+    }else{
+        empty.style.display = 'none';
+        table.style.display = 'table';
+        
+        tbody.innerHTML = '';
+        for(var i=0; i<cartItems.length; i++){
+            var row = '<tr>';
+            row += '<td>' + (i+1) + '</td>';
+            row += '<td>' + cartItems[i].name + '</td>';
+            row += '<td>Rs.' + cartItems[i].price + '</td>';
+            row += '<td><button class="btn-remove" onclick="deleteFromCart(\'' + cartItems[i].name + '\')">Remove</button></td>';
+            row += '</tr>';
+            tbody.innerHTML += row;
+        }
+    }
+    
+    total.innerText = 'Rs.' + totalPrice;
+}
+
+function deleteFromCart(serviceName){
+    removeItem(serviceName);
+    
+    var buttons = document.querySelectorAll('.item button');
+    for(var i=0; i<buttons.length; i++){
+        var btnText = buttons[i].parentElement.querySelector('span').innerText;
+        if(btnText === serviceName){
+            buttons[i].innerText = 'Add Items';
+            buttons[i].className = 'btn-add';
+            break;
+        }
+    }
+}
+
+function bookNow(){
+    var name = document.getElementById('name').value;
+    var email = document.getElementById('email').value;
+    var phone = document.getElementById('phone').value;
+    
+    if(name === '' || email === '' || phone === ''){
+        alert('Please fill all fields');
         return;
     }
     
-    if (cart.length === 0) {
+    if(cartItems.length === 0){
         alert('Please add at least one service');
         return;
     }
     
-    // EmailJS send email
-    const templateParams = {
-        to_email: email, // Send to user's email
-        user_name: fullName,
+    var serviceList = '';
+    for(var i=0; i<cartItems.length; i++){
+        serviceList += cartItems[i].name + ' - Rs.' + cartItems[i].price;
+        if(i < cartItems.length - 1){
+            serviceList += ', ';
+        }
+    }
+    
+    var params = {
+        to_email: email,
+        user_name: name,
         user_email: email,
         user_phone: phone,
-        services: cart.map(item => `${item.service} - ₹${item.price}`).join(', '),
-        total_amount: total
+        services: serviceList,
+        total_amount: totalPrice
     };
     
-    // Send actual email using EmailJS
-    emailjs.send('service_xdi79lj', 'template_fufhm88', templateParams)
-        .then(function(response) {
-            console.log('Email sent successfully!', response.status, response.text);
+    emailjs.send('service_xdi79lj', 'template_fufhm88', params)
+        .then(function(response){
+            console.log('Email sent', response);
             
-            // Clear cart after successful email
-            clearCart();
+            cartItems = [];
+            totalPrice = 0;
+            updateCart();
             
-            const msg = document.getElementById('successMsg');
-            msg.style.display = 'block';
+            var buttons = document.querySelectorAll('.item button');
+            for(var i=0; i<buttons.length; i++){
+                buttons[i].innerText = 'Add Items';
+                buttons[i].className = 'btn-add';
+            }
             
-            document.getElementById('fullName').value = '';
+            document.getElementById('name').value = '';
             document.getElementById('email').value = '';
             document.getElementById('phone').value = '';
             
-            setTimeout(() => {
-                msg.style.display = 'none';
+            var success = document.getElementById('success');
+            success.style.display = 'block';
+            setTimeout(function(){
+                success.style.display = 'none';
             }, 5000);
-        }, function(error) {
-            console.log('Email failed to send:', error);
+        }, function(error){
+            console.log('Error', error);
             alert('Failed to send email. Please try again.');
         });
 }
 
-function clearCart() {
-    cart = [];
-    total = 0;
+function subscribe(){
+    var name = document.getElementById('newsName').value;
+    var email = document.getElementById('newsEmail').value;
     
-    // Reset all buttons to "Add Items"
-    const buttons = document.querySelectorAll('.service-item button');
-    buttons.forEach(button => {
-        button.innerText = "Add Items";
-        button.classList.remove("remove");
-        button.classList.add("add");
-    });
-    
-    updateCartUI();
-}
-
-function subscribeNewsletter() {
-    const name = document.getElementById('newsletter-name').value;
-    const email = document.getElementById('newsletter-email').value;
-    
-    if (!name || !email) {
-        alert('Please fill in both name and email fields');
+    if(name === '' || email === ''){
+        alert('Please fill both fields');
         return;
     }
     
-    if (!email.includes('@')) {
-        alert('Please enter a valid email address');
+    if(email.indexOf('@') === -1){
+        alert('Please enter valid email');
         return;
     }
     
-    const successMsg = document.getElementById('newsletter-success');
-    successMsg.style.display = 'block';
+    var success = document.getElementById('newsSuccess');
+    success.style.display = 'block';
     
-    document.getElementById('newsletter-name').value = '';
-    document.getElementById('newsletter-email').value = '';
+    document.getElementById('newsName').value = '';
+    document.getElementById('newsEmail').value = '';
     
-    setTimeout(() => {
-        successMsg.style.display = 'none';
+    setTimeout(function(){
+        success.style.display = 'none';
     }, 5000);
 }
-
-document.addEventListener('DOMContentLoaded', function() {
-    const hamburger = document.querySelector('.hamburger');
-    const navLinks = document.querySelector('.nav-links');
-    
-    if (hamburger) {
-        hamburger.addEventListener('click', function() {
-            navLinks.classList.toggle('active');
-        });
-    }
-});
